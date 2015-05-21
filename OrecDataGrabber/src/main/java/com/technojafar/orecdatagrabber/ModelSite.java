@@ -11,7 +11,8 @@
  */
 package com.technojafar.orecdatagrabber;
 
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
+import com.mongodb.DB;
+
 
 /**
  *
@@ -32,7 +33,7 @@ public abstract class ModelSite implements Runnable {
     protected String _apiKey;
     protected String _tablePrefix;
     protected int _farmId;
-    protected AmazonDynamoDBClient _dbClient;
+    protected DB _db;
     protected long _delay = 0;
     protected String _startTime = "";
     protected String _name = "";
@@ -45,10 +46,10 @@ public abstract class ModelSite implements Runnable {
      * @param systemName
      * @param username
      * @param password
-     * @param farmId
-     * @param dbClient 
+     * @param farmId 
+     * @param db 
      */
-    public ModelSite(String tablePrefix, String systemId, String systemName, String username, String password, int farmId,AmazonDynamoDBClient dbClient){
+    public ModelSite(String tablePrefix, String systemId, String systemName, String username, String password, int farmId,DB db){
        _thread = null;
        _running = false;
        
@@ -57,7 +58,7 @@ public abstract class ModelSite implements Runnable {
         _username = username;
         _password = password;
         _farmId = farmId;
-        _dbClient = dbClient;
+        _db = db;
         
         _delay = 0;
         _startTime = "";
@@ -73,17 +74,17 @@ public abstract class ModelSite implements Runnable {
      * @param username
      * @param password
      * @param farmId
-     * @param apiKey
-     * @param dbClient 
+     * @param apiKey 
+     * @param db 
      */
-    public ModelSite(String tablePrefix, String systemId, String systemName, String username, String password, int farmId, String apiKey,AmazonDynamoDBClient dbClient) {
+    public ModelSite(String tablePrefix, String systemId, String systemName, String username, String password, int farmId, String apiKey,DB db) {
         _systemId = systemId;
         _systemName = systemName;
         _username = username;
         _password = password;
         _farmId = farmId;
         _apiKey = apiKey;
-        _dbClient = dbClient;
+        _db = db;
         
         _thread = null;
         _running = false;

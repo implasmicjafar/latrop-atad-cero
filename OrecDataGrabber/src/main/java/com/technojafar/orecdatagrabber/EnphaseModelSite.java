@@ -11,7 +11,8 @@
  */
 package com.technojafar.orecdatagrabber;
 
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
+import com.mongodb.DB;
+
 
 /**
  *
@@ -22,8 +23,8 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
  */
 public class EnphaseModelSite extends ModelSite{
 
-    public EnphaseModelSite(String tablePrefix, String systemId, String systemName, String username, String password, int farmId, String apiKey, AmazonDynamoDBClient dbClient) {
-        super(tablePrefix, systemId, systemName, username, password, farmId, apiKey, dbClient);
+    public EnphaseModelSite(String tablePrefix, String systemId, String systemName, String username, String password, int farmId, String apiKey, DB db) {
+        super(tablePrefix, systemId, systemName, username, password, farmId, apiKey, db);
     }
 
     @Override

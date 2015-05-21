@@ -22,9 +22,9 @@ public class Starter {
     // Singular instance object
     static Starter starter;
     
-    public Starter(){
+    public Starter(String configFile){
         //This thread only waits, all other work occurs on another thread
-        final DataGrabberCore dataGrabberCore = new DataGrabberCore();
+        final DataGrabberCore dataGrabberCore = new DataGrabberCore(configFile);
         dataGrabberCore.Start(); // As a threaded class, start running
         // However, when the application shuts, gracefully shutdown the core
         // too.
@@ -41,6 +41,10 @@ public class Starter {
     
     public static void main(String[] args){
         // Just instantiate only
-        starter = new Starter();        
+        if (args.length > 0){
+            starter = new Starter(args[0]);
+        }else{
+            starter = new Starter(null);        
+        }
     }
 }
