@@ -34,6 +34,10 @@ public abstract class ModelSite implements Runnable {
     protected String _tablePrefix;
     protected int _farmId;
     protected DB _db;
+
+    public void setDelay(long _delay) {
+        this._delay = _delay;
+    }
     protected long _delay = 0;
     protected String _startTime = "";
     protected String _name = "";
@@ -65,6 +69,28 @@ public abstract class ModelSite implements Runnable {
         _name = "";
         _rundelay = 0;
     } 
+
+    public void setName(String _name) {
+        this._name = _name;
+    }
+
+    public void setStartTime(String _startTime) {
+        this._startTime = _startTime;
+    }
+
+    public void setRundelay(long _rundelay) {
+        this._rundelay = _rundelay;
+    }
+
+    public long getDelay() {
+        return _delay;
+    }
+
+    public long getRundelay() {
+        return _rundelay;
+    }
+    
+    
     
     /**
      * Constructor for Model site with API key.
