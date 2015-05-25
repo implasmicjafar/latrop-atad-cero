@@ -79,14 +79,14 @@ public class DataGrabberCore implements Runnable {
                 }
             }
         }
-         _thread = null;
-        if (_dbClient != null){
-            try{
+        _thread = null;
+        if (_dbClient != null) {
+            try {
                 _dbClient.close();
-            }finally{
+            } finally {
                 _dbClient = null;
             }
-        } 
+        }
     }
 
     @Override
@@ -126,8 +126,8 @@ public class DataGrabberCore implements Runnable {
                     s.api_key = (String) obj.get("api_key");
                     s.start = (String) obj.get("start");
                     arr.add(s);
-                    System.out.println(cursor.next());
                 }
+                cursor.close();
             }
 
             coll = _mongoDb.getCollection(GetCollectionName("irradiance_data_types"));
@@ -145,6 +145,7 @@ public class DataGrabberCore implements Runnable {
                     ii.rundelay = Integer.parseInt((String) obj.get("rundelay"));
                     irr.add(ii);
                 }
+                cursor.close();
             }
 
             _sites = arr.toArray(new SolarFarm[0]);
@@ -157,19 +158,26 @@ public class DataGrabberCore implements Runnable {
 
             _models = new ModelSite[_sites.length + _sources.length];
             for (int i = 0; i < _sites.length; i++) {
-                if ("fronius".equals(_sites[i].system_type)) {
-                    _models[i] = new FroniusModelSite(_table_prefix, _sites[i].system_id, _sites[i].system_name, _sites[i].username, _sites[i].password, _sites[i].id, _mongoDb);
-                } else if ("enphase".equals(_sites[i].system_type)) {
-                    _models[i] = new EnphaseModelSite(_table_prefix, _sites[i].system_id, _sites[i].system_name, _sites[i].username, _sites[i].password, _sites[i].id, _sites[i].api_key, _mongoDb);
-                } else if ("aurora".equals(_sites[i].system_type)) {
-                    _models[i] = new AuroraModelSite(_table_prefix, _sites[i].system_id, _sites[i].system_name, _sites[i].username, _sites[i].password, _sites[i].id, _mongoDb);
-                } else if ("aurora_easyview".equals(_sites[i].system_type)) {
-                    _models[i] = new AuroraEasyViewModelSite(_table_prefix, _sites[i].system_id, _sites[i].system_name, _sites[i].username, _sites[i].password, _sites[i].id, _mongoDb);
+                if (null != _sites[i].system_type) {
+                    switch (_sites[i].system_type) {
+                        case "fronius":
+                            _models[i] = new FroniusModelSite(_table_prefix, _sites[i].system_id, _sites[i].system_name, _sites[i].username, _sites[i].password, _sites[i].id, _mongoDb);
+                            break;
+                        case "enphase":
+                            _models[i] = new EnphaseModelSite(_table_prefix, _sites[i].system_id, _sites[i].system_name, _sites[i].username, _sites[i].password, _sites[i].id, _sites[i].api_key, _mongoDb);
+                            break;
+                        case "aurora":
+                            _models[i] = new AuroraModelSite(_table_prefix, _sites[i].system_id, _sites[i].system_name, _sites[i].username, _sites[i].password, _sites[i].id, _mongoDb);
+                            break;
+                        case "aurora_easyview":
+                            _models[i] = new AuroraEasyViewModelSite(_table_prefix, _sites[i].system_id, _sites[i].system_name, _sites[i].username, _sites[i].password, _sites[i].id, _mongoDb);
+                            break;
+                    }
+                    _models[i].setName(_sites[i].system_type + " : " + _sites[i].system_name);
+                    _models[i].setDelay(delay);
+                    _models[i].setRundelay(_sites[i].rundelay);
+                    _models[i].setStartTime(_sites[i].start);
                 }
-                _models[i].setName(_sites[i].system_type + " : " + _sites[i].system_name);
-                _models[i].setDelay(delay);
-                _models[i].setRundelay(_sites[i].rundelay);
-                _models[i].setStartTime(_sites[i].start);
                 iIndex++;
             }
 
